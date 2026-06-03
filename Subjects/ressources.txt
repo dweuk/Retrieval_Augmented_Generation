@@ -1,0 +1,16 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    ressources.txt                                     :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: npapot <npapot@student.42perpignan.fr>     +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2026/05/18 13:45:12 by npapot            #+#    #+#              #
+#    Updated: 2026/05/18 13:45:12 by npapot           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+https://docs.langchain.com/oss/python/langchain/rag
+https://developers.llamaindex.ai/python/framework/understanding/rag/
+https://huggingface.co/BAAI/bge-m3
+https://github.com/nearai/ironclaw
