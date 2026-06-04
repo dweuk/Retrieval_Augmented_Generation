@@ -6,7 +6,7 @@
 #    By: npapot <npapot@student.42perpignan.fr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/18 13:45:12 by npapot            #+#    #+#              #
-#    Updated: 2026/05/18 13:45:12 by npapot           ###   ########.fr        #
+#    Updated: 2026/06/04 12:55:56 by npapot           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,3 +14,5 @@ https://docs.langchain.com/oss/python/langchain/rag
 https://developers.llamaindex.ai/python/framework/understanding/rag/
 https://huggingface.co/BAAI/bge-m3
 https://github.com/nearai/ironclaw
+
+start embedding in python : https://huggingface.co/spaces/hesamation/primer-llm-embedding?section=embeddings_as_graphs:_a_network_analysis

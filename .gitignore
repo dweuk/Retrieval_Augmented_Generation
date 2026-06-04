@@ -1,0 +1,55 @@
+# ── Generated data & models ────────────────────────────────────────────
+dataset/
+checkpoints/
+*.pt
+*.bin
+*.onnx
+
+# ── Python ──────────────────────────────────────────────────
+venv/
+env/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ── Notebook checkpoints ───────────────────────────────────
+.ipynb_checkpoints/
+
+# ── OS ──────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ── IDE / Editor ────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# ── Secrets ──────────────────────────────────────────────────
+.env
+
+# ── Logs & temp ─────────────────────────────────────────────
+*.log
+*.tmp
+*.bak
+
+# ── others ──────────────────────────────────────────────────
+subjects/*
+llm_sdk/
+moulinette/*

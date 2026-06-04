@@ -1,0 +1,9 @@
+# flake8 will ignore these files
+[flake8]
+exclude = 
+    .venv,
+    .git,
+    __pycache__,
+    build,
+    dist
+max-line-length = 79
