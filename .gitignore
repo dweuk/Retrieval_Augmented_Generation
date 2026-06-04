@@ -50,6 +50,4 @@ Desktop.ini
 *.bak
 
 # ── others ──────────────────────────────────────────────────
-subjects/*
-llm_sdk/
-moulinette/*
+vllm-0.10.1/
