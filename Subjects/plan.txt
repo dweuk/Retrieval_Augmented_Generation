@@ -1,5 +1,5 @@
 1-
-Data Ingestion & Indexing (Offline Phase)
+Data Ingestion & Indexing (Offline Phase) ////////// must have a flag for chunk size
 Implement a text, markdown, python and pdf-to-text file compatible
 Must be completed before any query is received
 Parsing: Ingest, clean, and validate the raw input data.
@@ -8,7 +8,7 @@ Pre-computation (Dense): Pass all chunks through the Bi-Encoder, generate embedd
 Pre-computation (Sparse): Build the BM25 inverted index for the corpus.
 
 2-
-Hybrid Retrieval - Re Ranking (Online Phase - Stage 1)
+Hybrid Retrieval (Online Phase - Stage 1).  /// must have a flag for top-k chunks found
 Parallel execution
 Receive the user's prompt.
 Vectorize the prompt only.
