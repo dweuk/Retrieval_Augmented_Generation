@@ -2,6 +2,7 @@
 AUTHOR=npapot
 PROJECT_NAME=RAG
 MODEL?=Qwen/Qwen3-0.6B
+CHUNCK?=2000
 
 # COLORS
 RED     = \033[0;31m
@@ -45,7 +46,7 @@ sync:
 	uv sync
 
 run:
-	uv run python -m src --model "$(MODEL)"
+	uv run python -m src --model "$(MODEL)" --chunck "$(CHUNCK)"
 
 debug: install
 	uv run python -m pdb src

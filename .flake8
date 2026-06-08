@@ -5,5 +5,9 @@ exclude =
     .git,
     __pycache__,
     build,
-    dist
+    dist,
+    moulinette_pkg,
+    vllm-0.10.1,
+    datasets_public,
+    subjects
 max-line-length = 79
