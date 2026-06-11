@@ -11,4 +11,9 @@ dependencies = [
     "torch>=2.10.0",
     "transformers>=5.3.0",
     "numpy>= 2.4.1",
+    "fire",
+    "spacy",
+    "faiss-cpu",
+    "rank_bm25",
+    "sentence-transformers",
 ]

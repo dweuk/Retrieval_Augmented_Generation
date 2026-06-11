@@ -2,20 +2,16 @@
 # ########################################################################### #
 #   shebang: 1                                                                #
 #                                                          :::      ::::::::  #
-#   __init__.py                                          :+:      :+:    :+:  #
+#   basemodel_config.py                                  :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
-#   Created: 2026/03/18 14:06:02 by npapot              #+#    #+#            #
-#   Updated: 2026/06/11 12:17:07 by npapot             ###   ########.fr      #
+#   Created: 2026/04/08 15:32:38 by npapot              #+#    #+#            #
+#   Updated: 2026/06/11 12:15:09 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
-__version__ = "1.0.0"
+from pydantic import BaseModel, Field
 
-__author__ = "Master npapot"
-
-from .rag_pipeline import RAGPipeline
-from .basemodel_config import Prompt
-
-__all__ = ["RAGPipeline", "Prompt"]
+class Prompt(BaseModel):
+    prompt: str = Field(min_length=1)

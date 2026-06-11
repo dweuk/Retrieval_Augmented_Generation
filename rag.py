@@ -2,32 +2,28 @@
 # ########################################################################### #
 #   shebang: 1                                                                #
 #                                                          :::      ::::::::  #
-#   __main__.py                                          :+:      :+:    :+:  #
+#   rag.py                                               :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/04/03 15:15:19 by npapot              #+#    #+#            #
-#   Updated: 2026/06/04 13:02:07 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/11 12:17:52 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
 import sys
 from pydantic import ValidationError
+from src.rag_pipeline import RAGPipeline
+import fire
 
-def main() -> None:
+def rag() -> None:
     """Main programm"""
     print("Welcome to my CRAZY Retrieval Augmented Generation project!")
 
     try:
         print("test")
+        fire.Fire(RAGPipeline)
 
-    except ValidationError as e:
-        print(
-            "BOMBOCLATTT"
-            "CRITICAL: Data Structural Validation Failed.", file=sys.stderr
-        )
-        print(e, file=sys.stderr)
-        sys.exit(1)
     except EOFError as e:
         print(
             "BOMBOCLATTT"
@@ -42,5 +38,6 @@ def main() -> None:
         sys.exit(1)
 
 
+
 if __name__ == "__main__":
-    main()
+    sys.exit(rag())
