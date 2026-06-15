@@ -13,6 +13,7 @@
 
 from pathlib import Path
 import fire
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from src.basemodel_config import Prompt
 
 
@@ -22,7 +23,7 @@ class RAGPipeline:
 
     def ingest(
             self,
-            data_directory: Path = "../vllm-0.10.1",
+            data_directory: Path = Path("/Users/noepapot/informatic/ecole_42/circle_4/RAG/vllm-0.10.1"),
             chunk_size: int = 1500,
             overlap: int = 50
             ) -> None:

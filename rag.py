@@ -7,12 +7,11 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/04/03 15:15:19 by npapot              #+#    #+#            #
-#   Updated: 2026/06/11 12:17:52 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/15 22:45:10 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
 import sys
-from pydantic import ValidationError
 from src.rag_pipeline import RAGPipeline
 import fire
 

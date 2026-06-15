@@ -5,8 +5,8 @@ Utilize an NLP parser (such as spaCy or NLTK)
 Must be completed before any query is received
 Parsing: Ingest, clean, and validate the raw input data.
 Chunking: Split the text into optimal, overlapping segments.
-Pre-computation (Dense): Pass all chunks through the Bi-Encoder, generate embeddings, and build the FAISS index.
 Pre-computation (Sparse): Build the BM25 inverted index for the corpus.
+Pre-computation (Dense): Pass all chunks through the Bi-Encoder, generate embeddings, and build the FAISS index.
 
 2-
 Hybrid Retrieval (Online Phase - Stage 1).  /// must have a flag for top-k chunks found
