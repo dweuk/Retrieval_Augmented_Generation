@@ -11,6 +11,8 @@ dependencies = [
     "torch>=2.10.0",
     "transformers>=5.3.0",
     "numpy>= 2.4.1",
+    "langchain",
+    "langchain-text-splitters",
     "fire",
     "spacy",
     "faiss-cpu",

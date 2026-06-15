@@ -7,13 +7,13 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/04/03 15:15:19 by npapot              #+#    #+#            #
-#   Updated: 2026/06/15 22:45:10 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/15 23:59:18 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
 import sys
 from src.rag_pipeline import RAGPipeline
-import fire
+import fire  # type: ignore
 
 def rag() -> None:
     """Main programm"""
