@@ -7,14 +7,14 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/16 11:03:50 by npapot              #+#    #+#            #
-#   Updated: 2026/06/16 11:29:44 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/16 11:54:10 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
 
 from .base_parser import BaseParser
 from pathlib import Path
-import fitz
+import fitz              # type: ignore
 
 
 class PDFParserText(BaseParser):
