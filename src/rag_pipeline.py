@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/11 11:47:19 by npapot              #+#    #+#            #
-#   Updated: 2026/06/16 11:52:35 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/16 12:00:21 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -49,12 +49,3 @@ class RAGPipeline:
         for file_path in directory_path.rglob("*"):
             if file_path.is_file():
                 yield file_path
-
-    def _extract_text(self, file_path: Path) -> str:
-        extension = file_path.suffix.lower()
-
-        if extension in ['.txt', '.md', '.py']:
-            with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
-                return f.read()
-        else:
-            return ""

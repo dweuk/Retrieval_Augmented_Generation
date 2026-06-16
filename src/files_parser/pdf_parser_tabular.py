@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/16 11:03:50 by npapot              #+#    #+#            #
-#   Updated: 2026/06/16 11:53:52 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/16 12:04:55 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -18,8 +18,6 @@ import pdfplumber        # type: ignore
 
 
 class PDFParserTabular(BaseParser):
-    def __init__(self) -> None:
-        pass
 
     def _extract_text(self, file_path: Path) -> str:
         extracted_text = []

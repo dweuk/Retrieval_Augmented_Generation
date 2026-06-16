@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/16 10:59:10 by npapot              #+#    #+#            #
-#   Updated: 2026/06/16 11:46:42 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/16 12:05:08 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -16,8 +16,6 @@ from pathlib import Path
 
 
 class BaseParser(ABC):
-    def __init__(self) -> None:
-        pass
 
     @abstractmethod
     def _extract_text(self, file_path: Path) -> str:

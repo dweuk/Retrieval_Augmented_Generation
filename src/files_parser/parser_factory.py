@@ -2,25 +2,27 @@
 # ########################################################################### #
 #   shebang: 1                                                                #
 #                                                          :::      ::::::::  #
-#   text_parser.py                                       :+:      :+:    :+:  #
+#   parser_factory.py                                    :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
-#   Created: 2026/06/15 23:39:22 by npapot              #+#    #+#            #
-#   Updated: 2026/06/16 12:05:04 by npapot             ###   ########.fr      #
+#   Created: 2026/06/16 12:00:40 by npapot              #+#    #+#            #
+#   Updated: 2026/06/16 12:17:33 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
+from .pdf_parser_tabular import PDFParserTabular
+from .pdf_parser_text import PDFParserText
+from .text_parser import TextParser
 from .base_parser import BaseParser
-from pathlib import Path
+from typing import Type
 
+class ParserFactory:
+    def __init__(self) -> None:
+        self.parser_classes: dict[str, Type[BaseParser]] = {
+                ".txt": TextParser,
+                ".md": TextParser,
+                ".py": TextParser,
+            }
 
-class TextParser(BaseParser):
-
-    def _extract_text(self, file_path: Path) -> str:
-        try:
-            with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
-                return f.read()
-        except Exception as e:
-            print(f"Error reading text file {file_path}: {e}")
-            return ""
+        self.active_parser: dict[str, BaseParser] = {}
