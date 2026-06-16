@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/11 11:47:19 by npapot              #+#    #+#            #
-#   Updated: 2026/06/16 12:00:21 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/16 14:49:15 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -32,8 +32,7 @@ class RAGPipeline:
         print(f"Starting ingestion on directory: {data_directory}")
         print(f"Chunk size is set to: {chunk_size} with overlap {overlap}")
         for file_path in self._get_all_files(data_directory):
-            raw_text = self._extract_text(file_path)
-            print(raw_text)
+            print(file_path)
 
     def prompt(self, prompt: "Prompt", top_k: int = 5) -> None:
         print(f"User Prompt: {prompt}")
