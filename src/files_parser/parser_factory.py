@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/16 12:00:40 by npapot              #+#    #+#            #
-#   Updated: 2026/06/17 21:34:01 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/17 22:28:29 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -16,7 +16,8 @@ from .text_parser import TextParser
 from .dict_parser import DictParser
 from .pdf_parser_tabular import PDFParserTabular
 from .pdf_parser_text import PDFParserText
-from .code_parser.python_parser import PythonParser
+from .code_parser import CodeParser
+from .python_parser import PythonParser
 from typing import Type
 from pathlib import Path
 import fitz  # type: ignore
@@ -26,19 +27,26 @@ class ParserFactory:
     def __init__(self) -> None:
         self.parser_classes: dict[str, Type[BaseParser]] = {
                 ".txt": TextParser,
+                '.sh': TextParser,
                 ".md": TextParser,
+                '.csv': TextParser,
                 ".html": TextParser,
+                '.rst': TextParser,
+                '.cpp': CodeParser,
+                '.cu': CodeParser,
+                '.c': CodeParser,
+                '.h': CodeParser,
+                '.hpp': CodeParser,
+                '.cuh': CodeParser,
+                '.js': CodeParser,
+                '.ts': CodeParser,
+                '.go': CodeParser,
+                '.rs': CodeParser,
                 ".py": PythonParser,
-                '.cpp': TextParser,
-                '.cu': TextParser,
-                '.h': TextParser,
-                '.cuh': TextParser,
+                '.java': CodeParser,
                 '.json': DictParser,
                 '.toml': DictParser,
-                '.yaml': DictParser,
-                '.sh': TextParser,
-                '.rst': TextParser,
-                '.csv': TextParser
+                '.yaml': DictParser
             }
 
         self.active_parsers: dict[str, BaseParser] = {}

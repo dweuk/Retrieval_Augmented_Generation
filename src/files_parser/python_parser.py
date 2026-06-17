@@ -7,12 +7,12 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/16 11:03:50 by npapot              #+#    #+#            #
-#   Updated: 2026/06/17 21:58:26 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/17 22:39:09 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
 
-from ..base_parser import BaseParser
+from .base_parser import BaseParser
 from pathlib import Path
 import ast
 from typing import Any

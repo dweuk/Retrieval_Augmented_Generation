@@ -15,9 +15,22 @@ __version__ = "1.0.0"
 
 __author__ = "Master npapot"
 
+from .base_parser import BaseParser
 from .text_parser import TextParser
 from .pdf_parser_tabular import PDFParserTabular
 from .pdf_parser_text import PDFParserText
+from .dict_parser import DictParser
+from .parser_factory import ParserFactory
+from .code_parser import CodeParser
+from .python_parser import PythonParser
 
-
-__all__ = ["TextParser", "PDFParserTabular", "PDFParserText"]
+__all__ = [
+    "BaseParser",
+    "TextParser",
+    "PDFParserTabular",
+    "PDFParserText",
+    "DictParser",
+    "ParserFactory",
+    "CodeParser",
+    "PythonParser"
+]
