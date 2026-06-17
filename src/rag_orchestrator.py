@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/11 11:47:19 by npapot              #+#    #+#            #
-#   Updated: 2026/06/18 00:37:12 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/18 00:54:52 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Generator, Any
 
 from src.files_parser.parser_factory import ParserFactory
-from langchain_text_splitters import (  # type: ignore
+from langchain_text_splitters import (
     RecursiveCharacterTextSplitter,
     Language,
 )
@@ -58,15 +58,12 @@ class RagOrchestrator:
         parser = self.parser_factory.get_parser(file_path)
 
         if parser is None:
-            print(f"skipping the file {file_path}!!\n")
             return []
 
-        print(f"Parsing {file_path}")
         extracted_text: str = parser.extract_text(file_path)
         final_block: list[str] = []
 
         if not extracted_text:
-            print(f"Nothing in the file {file_path}")
             return []
 
         splitter = self.get_right_splitter(file_format)
@@ -87,13 +84,26 @@ class RagOrchestrator:
             ) -> None:
         self.overlap: int = chunk_size // 20
         self.max_size: int = chunk_size + self.overlap
+
+        if isinstance(data_directory, str):
+            data_directory = Path(data_directory)
+
         print(f"Starting ingestion on directory: {data_directory}")
         print(
             f"Chunk size is set to: {chunk_size} "
             f"with overlap {self.overlap}"
         )
+
+        total_chunks = 0
         for file_path in self._get_all_files(data_directory):
-            self.ingest_helper(file_path)
+            chunks = self.ingest_helper(file_path)
+            if chunks:
+                total_chunks += len(chunks)
+
+        print(
+            f"\nExtraction Complete! Total chunks ready "
+            f"for WORK: {total_chunks}"
+        )
 
     def prompt(self, prompt: "Prompt", top_k: int = 5) -> None:
         print(f"User Prompt: {prompt}")

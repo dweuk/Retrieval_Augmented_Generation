@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/16 12:00:40 by npapot              #+#    #+#            #
-#   Updated: 2026/06/18 00:14:11 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/18 01:05:12 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -55,7 +55,6 @@ class ParserFactory:
     def _is_tabular_pdf(self, file_path: Path) -> bool:
         try:
             with fitz.open(file_path) as doc:
-                print(doc)
                 page = doc[0]
                 if len(page.get_drawings()) > 20:
                     return True
@@ -75,18 +74,15 @@ class ParserFactory:
         if file_format not in self.active_parsers:
             BlueprintClass = self.parser_classes[file_format]
             self.active_parsers[file_format] = BlueprintClass()
-            print(f"Instantiating {BlueprintClass}!!!")
 
         return self.active_parsers[file_format]
 
     def _pdf_parser(self, file_fromat: str, file_path: Path) -> BaseParser:
         if self._is_tabular_pdf(file_path):
             if 'pdf_tabular' not in self.active_parsers:
-                print("Instantiating PDF Tabular Parser!!!")
                 self.active_parsers['pdf_tabular'] = PDFParserTabular()
             return self.active_parsers['pdf_tabular']
         else:
             if 'pdf_text' not in self.active_parsers:
-                print("Instantiating PDF Text Parser!!!")
                 self.active_parsers['pdf_text'] = PDFParserText()
             return self.active_parsers['pdf_text']

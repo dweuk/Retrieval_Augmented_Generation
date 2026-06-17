@@ -5,7 +5,7 @@ import json
 import yaml  # type: ignore
 import tomli
 from typing import Any
-from langchain_text_splitters import RecursiveJsonSplitter  # type: ignore
+from langchain_text_splitters import RecursiveJsonSplitter
 
 
 class DictParser(BaseParser):

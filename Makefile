@@ -46,6 +46,9 @@ sync:
 run:
 	uv run python rag.py
 
+ingest:
+	uv run python rag.py ingest --data_directory "vllm-0.10.1"
+
 debug: install
 	uv run python -m pdb src
 

@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/16 11:03:50 by npapot              #+#    #+#            #
-#   Updated: 2026/06/17 22:45:03 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/18 01:08:35 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -138,7 +138,7 @@ class CodeParser(BaseParser):
                 return src_code
 
             language = tree_sitter_languages.get_language(str_langage)
-            self.parser.language = language
+            self.parser.set_language(language)
             tree = self.parser.parse(bytes(src_code, "utf8"))
 
             query = language.query(self.queries[str_langage])
@@ -162,5 +162,5 @@ class CodeParser(BaseParser):
                 return src_code
 
         except Exception as e:
-            print(f"Error reading file {file_path}: {e}")
+            print(f"Error reading code file {file_path}: {e}")
             return ""

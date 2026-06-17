@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/04/03 15:15:19 by npapot              #+#    #+#            #
-#   Updated: 2026/06/17 16:33:31 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/18 01:07:08 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -20,7 +20,6 @@ def rag() -> None:
     print("Welcome to my CRAZY Retrieval Augmented Generation project!")
 
     try:
-        print("test")
         fire.Fire(RagOrchestrator)
 
     except EOFError as e:

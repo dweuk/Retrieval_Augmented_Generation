@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/16 11:03:50 by npapot              #+#    #+#            #
-#   Updated: 2026/06/17 22:39:09 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/18 00:56:18 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -46,7 +46,6 @@ class RagCodeVisitor(ast.NodeVisitor):
         else:
             is_method = False
 
-        print(params)
         if is_method and params and params[0] == 'self':
             params.pop(0)
 
@@ -79,7 +78,6 @@ class PythonParser(BaseParser):
             visitor.visit(tree)
 
             extracted_text = self.format_chuncks(visitor)
-            print(ast.dump(tree, indent=4))
 
             return extracted_text
 
@@ -97,10 +95,9 @@ class PythonParser(BaseParser):
                     f"Docstring: {item['docstring']}"
                 )
             else:
-                if item['parent_class']:
+                parent = ""
+                if item.get('parent_class'):
                     parent = f" belonging to class {item['parent_class']}"
-                else:
-                    ""
                 if parent != "":
                     chunk_text = (
                         f"Method: {item['name']}{parent}\n"

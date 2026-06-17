@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/16 11:03:50 by npapot              #+#    #+#            #
-#   Updated: 2026/06/16 12:04:59 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/18 00:56:25 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -29,8 +29,7 @@ class PDFParserText(BaseParser):
                     page_text = page.get_text()
                     extracted_text.append(page_text)
 
-        except Exception as e:
-            print(f"Error reading PDF {file_path}: {e}")
+        except Exception:
             return ""
 
         return "\n".join(extracted_text)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from .base_parser import BaseParser
 from pathlib import Path
-from langchain_text_splitters import MarkdownHeaderTextSplitter  # type: ignore
+from langchain_text_splitters import MarkdownHeaderTextSplitter
 
 
 class MdParser(BaseParser):
