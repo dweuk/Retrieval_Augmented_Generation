@@ -126,7 +126,7 @@ class CodeParser(BaseParser):
                 node_data[block_id]["name"] = name
         return node_data
 
-    def _extract_text(self, file_path: Path) -> str:
+    def extract_text(self, file_path: Path) -> str:
         try:
             file_format = file_path.suffix.lower()
             str_langage = self.ext_to_lang.get(file_format)

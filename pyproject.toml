@@ -20,4 +20,6 @@ dependencies = [
     "faiss-cpu",
     "rank_bm25",
     "sentence-transformers",
+    "pyyaml>=6.0.3",
+    "tomli>=2.4.1",
 ]

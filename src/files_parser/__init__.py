@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/03/18 14:06:02 by npapot              #+#    #+#            #
-#   Updated: 2026/06/16 11:50:39 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/18 00:12:09 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -32,5 +32,5 @@ __all__ = [
     "DictParser",
     "ParserFactory",
     "CodeParser",
-    "PythonParser"
+    "PythonParser",
 ]

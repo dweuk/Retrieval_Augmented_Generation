@@ -19,7 +19,7 @@ import fitz              # type: ignore
 
 class PDFParserText(BaseParser):
 
-    def _extract_text(self, file_path: Path) -> str:
+    def extract_text(self, file_path: Path) -> str:
         extracted_text = []
 
         try:

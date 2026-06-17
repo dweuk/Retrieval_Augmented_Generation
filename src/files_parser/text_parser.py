@@ -17,7 +17,7 @@ from pathlib import Path
 
 class TextParser(BaseParser):
 
-    def _extract_text(self, file_path: Path) -> str:
+    def extract_text(self, file_path: Path) -> str:
         try:
             with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
                 return f.read()

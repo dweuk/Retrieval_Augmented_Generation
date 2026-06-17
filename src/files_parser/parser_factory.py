@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/16 12:00:40 by npapot              #+#    #+#            #
-#   Updated: 2026/06/17 22:28:29 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/18 00:14:11 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -16,6 +16,7 @@ from .text_parser import TextParser
 from .dict_parser import DictParser
 from .pdf_parser_tabular import PDFParserTabular
 from .pdf_parser_text import PDFParserText
+from .md_parser import MdParser
 from .code_parser import CodeParser
 from .python_parser import PythonParser
 from typing import Type
@@ -28,8 +29,8 @@ class ParserFactory:
         self.parser_classes: dict[str, Type[BaseParser]] = {
                 ".txt": TextParser,
                 '.sh': TextParser,
-                ".md": TextParser,
                 '.csv': TextParser,
+                ".md": MdParser,
                 ".html": TextParser,
                 '.rst': TextParser,
                 '.cpp': CodeParser,
