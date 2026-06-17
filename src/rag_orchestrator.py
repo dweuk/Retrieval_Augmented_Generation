@@ -2,12 +2,12 @@
 # ########################################################################### #
 #   shebang: 1                                                                #
 #                                                          :::      ::::::::  #
-#   rag_pipeline.py                                      :+:      :+:    :+:  #
+#   rag_orchestrator.py                                  :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/11 11:47:19 by npapot              #+#    #+#            #
-#   Updated: 2026/06/16 14:49:15 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/17 16:32:58 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -17,7 +17,7 @@ from typing import Generator, Any
 from src.basemodel_config import Prompt
 
 
-class RAGPipeline:
+class RagOrchestrator:
     def __init__(self) -> None:
         pass
 

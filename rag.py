@@ -7,12 +7,12 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/04/03 15:15:19 by npapot              #+#    #+#            #
-#   Updated: 2026/06/15 23:59:18 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/17 16:33:31 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
 import sys
-from src.rag_pipeline import RAGPipeline
+from src.rag_orchestrator import RagOrchestrator
 import fire  # type: ignore
 
 def rag() -> None:
@@ -21,7 +21,7 @@ def rag() -> None:
 
     try:
         print("test")
-        fire.Fire(RAGPipeline)
+        fire.Fire(RagOrchestrator)
 
     except EOFError as e:
         print(

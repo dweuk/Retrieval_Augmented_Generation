@@ -7,15 +7,15 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/16 12:00:40 by npapot              #+#    #+#            #
-#   Updated: 2026/06/16 14:51:40 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/17 16:31:40 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
+from .base_parser import BaseParser
+from .text_parser import TextParser
+from .dict_parser import DictParser
 from .pdf_parser_tabular import PDFParserTabular
 from .pdf_parser_text import PDFParserText
-from .text_parser import TextParser
-from .base_parser import BaseParser
-from .dict_parser import DictParser
 from typing import Type
 from pathlib import Path
 import fitz  # type: ignore
@@ -26,6 +26,7 @@ class ParserFactory:
         self.parser_classes: dict[str, Type[BaseParser]] = {
                 ".txt": TextParser,
                 ".md": TextParser,
+                ".html": TextParser,
                 ".py": TextParser,
                 '.cpp': TextParser,
                 '.cu': TextParser,
@@ -33,9 +34,10 @@ class ParserFactory:
                 '.cuh': TextParser,
                 '.json': DictParser,
                 '.toml': DictParser,
-                '.yaml': TextParser,
+                '.yaml': DictParser,
                 '.sh': TextParser,
                 '.rst': TextParser,
+                '.csv': TextParser
             }
 
         self.active_parsers: dict[str, BaseParser] = {}
@@ -55,16 +57,7 @@ class ParserFactory:
         file_format = file_path.suffix.lower()
 
         if file_format == "pdf":
-            if self._is_tabular_pdf(file_path):
-                if 'pdf_tabular' not in self.active_parsers:
-                    print("Instantiating PDF Tabular Parser!!!")
-                    self.active_parsers['pdf_tabular'] = PDFParserTabular()
-                return self.active_parsers['pdf_tabular']
-            else:
-                if 'pdf_text' not in self.active_parsers:
-                    print("Instantiating PDF Text Parser!!!")
-                    self.active_parsers['pdf_text'] = PDFParserText()
-                return self.active_parsers['pdf_text']
+            return (self._pdf_parser(file_format, file_path))
 
         if file_format not in self.parser_classes:
             return None
@@ -75,3 +68,15 @@ class ParserFactory:
             print(f"Instantiating {BlueprintClass}!!!")
 
         return self.active_parsers[file_format]
+
+    def _pdf_parser(self, file_fromat: str, file_path: Path) -> BaseParser:
+        if self._is_tabular_pdf(file_path):
+            if 'pdf_tabular' not in self.active_parsers:
+                print("Instantiating PDF Tabular Parser!!!")
+                self.active_parsers['pdf_tabular'] = PDFParserTabular()
+            return self.active_parsers['pdf_tabular']
+        else:
+            if 'pdf_text' not in self.active_parsers:
+                print("Instantiating PDF Text Parser!!!")
+                self.active_parsers['pdf_text'] = PDFParserText()
+            return self.active_parsers['pdf_text']
