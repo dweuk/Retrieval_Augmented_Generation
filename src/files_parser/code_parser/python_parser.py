@@ -7,23 +7,24 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/16 11:03:50 by npapot              #+#    #+#            #
-#   Updated: 2026/06/17 19:05:11 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/17 21:58:26 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
 
-from .base_parser import BaseParser
+from ..base_parser import BaseParser
 from pathlib import Path
-import ast              # type: ignore
+import ast
+from typing import Any
 
 
 class RagCodeVisitor(ast.NodeVisitor):
     def __init__(self, src_code: str) -> None:
         self.src_code = src_code
-        self.current_class = None
-        self.extracted_data: list = []
+        self.current_class: str | None = None
+        self.extracted_data: list[dict[str, Any]] = []
 
-    def visit_ClassDef(self, node):
+    def visit_ClassDef(self, node: ast.ClassDef) -> None:
         self.current_class = node.name
 
         doc = ast.get_docstring(node)
@@ -36,7 +37,7 @@ class RagCodeVisitor(ast.NodeVisitor):
         self.generic_visit(node)
         self.current_class = None
 
-    def visit_FunctionDef(self, node) -> None:
+    def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
         doc = ast.get_docstring(node)
         params = [arg.arg for arg in node.args.args]
 
@@ -49,8 +50,7 @@ class RagCodeVisitor(ast.NodeVisitor):
         if is_method and params and params[0] == 'self':
             params.pop(0)
 
-
-        func_code = ast.get_source_segment(self.original_source, node)
+        func_code = ast.get_source_segment(self.src_code, node)
 
         self.extracted_data.append({
             "type": "method" if is_method else "function",
@@ -63,20 +63,38 @@ class RagCodeVisitor(ast.NodeVisitor):
 
         self.generic_visit(node)
 
-    def run_rag_code_visitor(self, node) -> None:
-        if node:
-            self.visit_ClassDef()
-
 
 class PythonParser(BaseParser):
 
+    def _extract_text(self, file_path: Path) -> str:
+        extracted_text: str = ""
+
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                src_code: str = f.read()
+
+            tree = ast.parse(src_code)
+
+            visitor = RagCodeVisitor(src_code)
+            visitor.visit(tree)
+
+            extracted_text = self.format_chuncks(visitor)
+            print(ast.dump(tree, indent=4))
+
+            return extracted_text
+
+        except Exception as e:
+            print(f"Error reading Python file {file_path}: {e}")
+            return ""
+
     def format_chuncks(self, visitor: RagCodeVisitor) -> str:
-        extracted_text: list = []
+        extracted_text: list[str] = []
 
         for item in visitor.extracted_data:
             if item["type"] == "class":
                 chunk_text = (
-                    f"Class: {item['class_name']}\nDocstring: {item['docstring']}"
+                    f"Class: {item['class_name']}\n"
+                    f"Docstring: {item['docstring']}"
                 )
             else:
                 if item['parent_class']:
@@ -99,28 +117,3 @@ class PythonParser(BaseParser):
             extracted_text.append(chunk_text)
 
         return "\n\n".join(extracted_text)
-
-    def _extract_text(self, file_path: Path) -> str:
-        try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                src_code: str = f.read()
-
-            tree = ast.parse(src_code)
-
-            visitor = RagCodeVisitor(src_code)
-            visitor.visit(tree)
-
-            extracted_text: str = self.format_chuncks(visitor)
-            print(ast.dump(tree, indent=4))
-
-            return extracted_text
-
-        except Exception as e:
-            print(f"Error reading Python file {file_path}: {e}")
-            return ""
-
-
-if __name__ == "__main__":
-    python_parser = PythonParser()
-    extracted_text: str = python_parser._extract_text(Path("/Users/noepapot/informatic/ecole_42/circle_4/RAG/src/files_parser/test.py"))
-    print(extracted_text)

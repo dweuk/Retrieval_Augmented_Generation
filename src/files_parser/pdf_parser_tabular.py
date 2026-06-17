@@ -14,7 +14,7 @@
 
 from .base_parser import BaseParser
 from pathlib import Path
-import pdfplumber        # type: ignore
+import pdfplumber
 
 
 class PDFParserTabular(BaseParser):

@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/16 12:00:40 by npapot              #+#    #+#            #
-#   Updated: 2026/06/17 16:31:40 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/17 21:34:01 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -16,6 +16,7 @@ from .text_parser import TextParser
 from .dict_parser import DictParser
 from .pdf_parser_tabular import PDFParserTabular
 from .pdf_parser_text import PDFParserText
+from .code_parser.python_parser import PythonParser
 from typing import Type
 from pathlib import Path
 import fitz  # type: ignore
@@ -27,7 +28,7 @@ class ParserFactory:
                 ".txt": TextParser,
                 ".md": TextParser,
                 ".html": TextParser,
-                ".py": TextParser,
+                ".py": PythonParser,
                 '.cpp': TextParser,
                 '.cu': TextParser,
                 '.h': TextParser,
