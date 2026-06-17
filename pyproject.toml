@@ -16,6 +16,7 @@ dependencies = [
     "PyMuPDF",
     "fire",
     "spacy",
+    "pdfplumber",
     "faiss-cpu",
     "rank_bm25",
     "sentence-transformers",
