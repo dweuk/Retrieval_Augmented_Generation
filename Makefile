@@ -55,6 +55,9 @@ test_bm25s:
 test_faiss:
 	uv run python rag.py test_faiss --query "llamaindex"
 
+index:
+	uv run python rag.py index --query "llamaindex"
+
 debug: install
 	uv run python -m pdb src
 

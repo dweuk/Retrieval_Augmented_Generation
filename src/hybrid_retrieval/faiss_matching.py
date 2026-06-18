@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/18 15:51:03 by npapot              #+#    #+#            #
-#   Updated: 2026/06/18 16:43:49 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/18 19:42:05 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -39,9 +39,11 @@ class FaissMatching:
     def query_da_embedded(
                 self,
                 query: str,
-                k_size: int = 5,
+                k_size: int = 10,
                 print_yes: bool = False
-            ) -> None:
+            ) -> list[str]:
+        right_chunk: list[str] = []
+
         query_vector = self.model.encode([query])
         query_vector = np.array(query_vector).astype('float32')
 
@@ -51,8 +53,11 @@ class FaissMatching:
             chunk_id = chunk_ids[0][i]
             score = distances[0][i]
             doc = self.corpus[chunk_id]
+            right_chunk.append(doc)
 
             if print_yes:
-                print(f"\n--- Rank {i+1} (Distance: {score:.2f}) ---")
+                print(f"\n------- Rank {i+1} (Distance: {score:.2f}) -------")
                 print(doc)
                 print("=" * 50)
+
+        return right_chunk

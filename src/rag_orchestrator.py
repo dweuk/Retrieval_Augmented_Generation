@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/11 11:47:19 by npapot              #+#    #+#            #
-#   Updated: 2026/06/18 16:43:58 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/18 19:49:22 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -15,8 +15,8 @@ from pathlib import Path
 from typing import Generator, Any
 
 from src.files_parser.parser_factory import ParserFactory
-from src.hybrid_retrieval.best_matching_25 import BestMatching25
-from src.hybrid_retrieval.faiss_matching import FaissMatching
+from src.hybrid_retrieval import BestMatching25, FaissMatching
+from src.re_ranking import ReRanker
 from langchain_text_splitters import (
     RecursiveCharacterTextSplitter,
     Language,
@@ -29,6 +29,7 @@ class RagOrchestrator:
         self.parser_factory = ParserFactory()
         self.bm25 = BestMatching25()
         self.faiss = FaissMatching()
+        self.re_ranker = ReRanker()
         self.lang_mapping = {
             ".py": Language.PYTHON,
             ".js": Language.JS,
@@ -122,20 +123,68 @@ class RagOrchestrator:
             if file_path.is_file():
                 yield file_path
 
+    def index_helper(self, query: str, max_chunk: int) -> list[str]:
+        self.bm25.index_da_chuncks(self.chunks)
+        self.faiss.embed_da_chuncks(self.chunks)
+
+        bm25_chunks: list[str] = self.bm25.query_da_corpus(
+                                            query,
+                                            k_size=3,
+                                            print_yes=False
+                                        )
+        faiss_chunks: list[str] = self.faiss.query_da_embedded(
+                                            query,
+                                            k_size=3,
+                                            print_yes=False
+                                        )
+
+        combined_chunks = bm25_chunks + faiss_chunks
+        unique_chunks = list(set(combined_chunks))
+
+        return unique_chunks
+
+    def index(
+            self,
+            query: str,
+            max_chunk_zise: int = 1500,
+            max_chunk: int = 5,
+            save_data: str = "data/processed",
+            print_it: bool = False
+        ) -> None:
+        # path_to_save_data = Path(save_data)
+        best_combined_chunks: list[str] = []
+        try:
+            unique_chunks: list[str] = self.index_helper(query, max_chunk)
+            best_combined_chunks = self.re_ranker.reclassification(
+                                                    query,
+                                                    unique_chunks,
+                                                    max_chunk
+                                                )
+
+            if print_it:
+                print("\n🏆 THE FINAL TOP 3 CHUNKS 🏆")
+                for i, chunk in enumerate(best_combined_chunks):
+                    print(f"\n--- Winner #{i+1} ---") 
+                    print(chunk)
+
+        except Exception as e:
+            print(e)
+            return
+
     # def index_bm25(self, max_chunk_size: int = 1500) -> None:
     #     self.bm25.index_da_chuncks(self.chunks)
-
-    # def index_faiss(self, max_chunk_size: int = 1500) -> None:
-    #     self.faiss.embed_da_chuncks(self.chunks)
 
     # def test_bm25s(self, query: str) -> None:
     #     self.ingest()
     #     self.index_bm25()
     #     print(f"\n--- Testing Search for: '{query}' ---")
-    #     self.bm25.query_da_corpus(query, k_size=3, print_yes=False)
+    #     self.bm25.query_da_corpus(query, k_size=3, print_yes=True)
+
+    # def index_faiss(self, max_chunk_size: int = 1500) -> None:
+    #     self.faiss.embed_da_chuncks(self.chunks)
 
     # def test_faiss(self, query: str) -> None:
     #     self.ingest()
     #     self.index_faiss()
     #     print(f"\n--- Testing Search for: '{query}' ---")
-    #     self.faiss.query_da_embedded(query, k_size=3, print_yes=False)
+    #     self.faiss.query_da_embedded(query, k_size=3, print_yes=True)
