@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/11 11:47:19 by npapot              #+#    #+#            #
-#   Updated: 2026/06/18 16:05:22 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/18 16:10:31 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -112,7 +112,7 @@ class RagOrchestrator:
         self.ingest()
         self.index()
         print(f"\n--- Testing Search for: '{query}' ---")
-        self.bm25.query_da_corpus(query, k_size=3, print_yes=True)
+        self.bm25.query_da_corpus(query, k_size=3, print_yes=False)
 
     def prompt(self, prompt: "Prompt", top_k: int = 5) -> None:
         print(f"User Prompt: {prompt}")
