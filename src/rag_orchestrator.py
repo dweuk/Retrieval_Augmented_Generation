@@ -7,12 +7,13 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/11 11:47:19 by npapot              #+#    #+#            #
-#   Updated: 2026/06/18 19:49:22 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/19 00:00:35 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
 from pathlib import Path
 from typing import Generator, Any
+import os
 
 from src.files_parser.parser_factory import ParserFactory
 from src.hybrid_retrieval import BestMatching25, FaissMatching
@@ -77,6 +78,15 @@ class RagOrchestrator:
         splitter = self.get_right_splitter(file_format)
         return splitter.split_text(extracted_text)
 
+    def extend_chunks(self, data_directory) -> int:
+        total_chunks: int = 0
+        for file_path in self._get_all_files(data_directory):
+            file_chunks = self.ingest_helper(file_path)
+            if file_chunks:
+                self.chunks.extend(file_chunks)
+                total_chunks += len(file_chunks)
+        return total_chunks
+
     def ingest(
             self,
             data_directory: Path = Path(
@@ -96,12 +106,7 @@ class RagOrchestrator:
             f"with overlap {self.overlap}"
         )
 
-        total_chunks = 0
-        for file_path in self._get_all_files(data_directory):
-            file_chunks = self.ingest_helper(file_path)
-            if file_chunks:
-                self.chunks.extend(file_chunks)
-                total_chunks += len(file_chunks)
+        total_chunks = self.extend_chunks(data_directory)
 
         print(
             f"\nExtraction Complete! Total chunks ready "
@@ -124,9 +129,6 @@ class RagOrchestrator:
                 yield file_path
 
     def index_helper(self, query: str, max_chunk: int) -> list[str]:
-        self.bm25.index_da_chuncks(self.chunks)
-        self.faiss.embed_da_chuncks(self.chunks)
-
         bm25_chunks: list[str] = self.bm25.query_da_corpus(
                                             query,
                                             k_size=3,
@@ -141,7 +143,13 @@ class RagOrchestrator:
         combined_chunks = bm25_chunks + faiss_chunks
         unique_chunks = list(set(combined_chunks))
 
-        return unique_chunks
+        best_combined_chunks = self.re_ranker.reclassification(
+                                                    query,
+                                                    unique_chunks,
+                                                    max_chunk
+                                                )
+
+        return best_combined_chunks
 
     def index(
             self,
@@ -150,26 +158,60 @@ class RagOrchestrator:
             max_chunk: int = 5,
             save_data: str = "data/processed",
             print_it: bool = False
-        ) -> None:
+        ) -> list[str]:
         # path_to_save_data = Path(save_data)
         best_combined_chunks: list[str] = []
         try:
-            unique_chunks: list[str] = self.index_helper(query, max_chunk)
-            best_combined_chunks = self.re_ranker.reclassification(
-                                                    query,
-                                                    unique_chunks,
-                                                    max_chunk
-                                                )
+            self.bm25.index_da_chunks(self.chunks)
+            self.faiss.embed_da_chunks(self.chunks)
 
+            best_combined_chunks = self.index_helper(query, max_chunk)
             if print_it:
                 print("\n🏆 THE FINAL TOP 3 CHUNKS 🏆")
                 for i, chunk in enumerate(best_combined_chunks):
                     print(f"\n--- Winner #{i+1} ---") 
                     print(chunk)
 
+            return best_combined_chunks
+
         except Exception as e:
             print(e)
             return
+
+    def ask_question(
+                self,
+                query: str,
+                max_chunk: int = 5,
+                save_data: str = "data/processed"
+            ) -> None:
+        if os.path.exists(save_data + "/faiss.index"):
+            print("Libraries found on disk! Loading them instantly...")
+            self.bm25.retrieve_da_data(save_data)
+            self.faiss.retrieve_da_data(save_data)
+        else:
+            print("No libraries found. Starting the ingestion process...")
+            self.ingest()
+
+            if not self.chunks:
+                print(
+                    "🚨 CRITICAL ERROR: The data directory is empty or"
+                    "invalid. Could not extract any chunks!"
+                )
+                return
+
+            self.bm25.index_da_chunks(
+                            self.chunks, save_data, save_to_path=True
+                        )
+            self.faiss.embed_da_chunks(
+                            self.chunks, save_data,save_to_path=True
+                        )
+
+        best_combined_chunks = self.index_helper(query, max_chunk)
+
+        print("\n🏆 THE FINAL TOP 3 CHUNKS 🏆")
+        for i, chunk in enumerate(best_combined_chunks):
+            print(f"\n--- Winner #{i+1} ---")
+            print(chunk)
 
     # def index_bm25(self, max_chunk_size: int = 1500) -> None:
     #     self.bm25.index_da_chuncks(self.chunks)

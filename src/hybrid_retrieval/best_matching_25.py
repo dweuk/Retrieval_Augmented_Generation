@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/18 11:42:51 by npapot              #+#    #+#            #
-#   Updated: 2026/06/18 19:41:51 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/18 23:50:37 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -21,11 +21,11 @@ class BestMatching25:
         self.corpus: list[str] = []
         self.retriever = bm25s.BM25(backend="numba")
 
-    def index_da_chuncks(
+    def index_da_chunks(
                     self,
                     corpus: list[str],
                     save_data: str = "data/processed",
-                    save_to_path: bool = False
+                    save_to_path: bool = True
                 ) -> None:
         path_to_save_data = Path(save_data)
         # optional: create a stemmer
@@ -78,6 +78,7 @@ class BestMatching25:
     def retrieve_da_data(
                 self,
                 save_data: str = "data/processed"
-                ) -> None:
+                ) -> list[str]:
         path_to_save_data = Path(save_data)
-        self.retriever.load(path_to_save_data, load_corpus=True)
+        index = self.retriever.load(path_to_save_data, load_corpus=True)
+        return index
