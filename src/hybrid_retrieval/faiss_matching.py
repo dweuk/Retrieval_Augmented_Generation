@@ -7,13 +7,52 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/18 15:51:03 by npapot              #+#    #+#            #
-#   Updated: 2026/06/18 16:00:08 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/18 16:43:49 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
-# import faiss
+import faiss
+from sentence_transformers import SentenceTransformer
+import numpy as np
 
 
-class Faiss:
+class FaissMatching:
     def __init__(self) -> None:
-        pass
+        self.model = SentenceTransformer('all-MiniLM-L6-v2')
+        self.corpus: list[str] = []
+
+    def embed_da_chuncks(
+                self,
+                corpus: list[str]
+            ) -> None:
+        self.corpus.extend(corpus)
+
+        embeddings = self.model.encode(corpus)
+
+        # The size of the vectors (384 for MiniLM)
+        dimension = embeddings[0].shape[0]
+        self.faiss_index = faiss.IndexFlatL2(dimension)
+
+        # 3. Add to the index
+        self.faiss_index.add(np.array(embeddings).astype('float32'))
+
+    def query_da_embedded(
+                self,
+                query: str,
+                k_size: int = 5,
+                print_yes: bool = False
+            ) -> None:
+        query_vector = self.model.encode([query])
+        query_vector = np.array(query_vector).astype('float32')
+
+        distances, chunk_ids = self.faiss_index.search(query_vector, k=k_size)
+
+        for i in range(k_size):
+            chunk_id = chunk_ids[0][i]
+            score = distances[0][i]
+            doc = self.corpus[chunk_id]
+
+            if print_yes:
+                print(f"\n--- Rank {i+1} (Distance: {score:.2f}) ---")
+                print(doc)
+                print("=" * 50)

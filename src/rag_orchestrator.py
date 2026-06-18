@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/11 11:47:19 by npapot              #+#    #+#            #
-#   Updated: 2026/06/18 16:10:31 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/18 16:43:58 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -16,6 +16,7 @@ from typing import Generator, Any
 
 from src.files_parser.parser_factory import ParserFactory
 from src.hybrid_retrieval.best_matching_25 import BestMatching25
+from src.hybrid_retrieval.faiss_matching import FaissMatching
 from langchain_text_splitters import (
     RecursiveCharacterTextSplitter,
     Language,
@@ -27,6 +28,7 @@ class RagOrchestrator:
     def __init__(self) -> None:
         self.parser_factory = ParserFactory()
         self.bm25 = BestMatching25()
+        self.faiss = FaissMatching()
         self.lang_mapping = {
             ".py": Language.PYTHON,
             ".js": Language.JS,
@@ -105,15 +107,6 @@ class RagOrchestrator:
             f"for WORK: {total_chunks}\n\n"
         )
 
-    def index(self, max_chunk_size: int = 1500) -> None:
-        self.bm25.index_da_chuncks(self.chunks)
-
-    def test_bm25s(self, query: str) -> None:
-        self.ingest()
-        self.index()
-        print(f"\n--- Testing Search for: '{query}' ---")
-        self.bm25.query_da_corpus(query, k_size=3, print_yes=False)
-
     def prompt(self, prompt: "Prompt", top_k: int = 5) -> None:
         print(f"User Prompt: {prompt}")
         print(f"Retrieving top {top_k} chunks")
@@ -128,3 +121,21 @@ class RagOrchestrator:
         for file_path in directory_path.rglob("*"):
             if file_path.is_file():
                 yield file_path
+
+    # def index_bm25(self, max_chunk_size: int = 1500) -> None:
+    #     self.bm25.index_da_chuncks(self.chunks)
+
+    # def index_faiss(self, max_chunk_size: int = 1500) -> None:
+    #     self.faiss.embed_da_chuncks(self.chunks)
+
+    # def test_bm25s(self, query: str) -> None:
+    #     self.ingest()
+    #     self.index_bm25()
+    #     print(f"\n--- Testing Search for: '{query}' ---")
+    #     self.bm25.query_da_corpus(query, k_size=3, print_yes=False)
+
+    # def test_faiss(self, query: str) -> None:
+    #     self.ingest()
+    #     self.index_faiss()
+    #     print(f"\n--- Testing Search for: '{query}' ---")
+    #     self.faiss.query_da_embedded(query, k_size=3, print_yes=False)
