@@ -6,10 +6,11 @@
 #    By: npapot <npapot@student.42perpignan.fr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/18 13:45:12 by npapot            #+#    #+#              #
-#    Updated: 2026/06/04 12:55:56 by npapot           ###   ########.fr        #
+#    Updated: 2026/06/18 15:23:13 by npapot           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+top_ressources:
 https://docs.langchain.com/oss/python/langchain/rag
 https://developers.llamaindex.ai/python/framework/understanding/rag/
 https://huggingface.co/BAAI/bge-m3
