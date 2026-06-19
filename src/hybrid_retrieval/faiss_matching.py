@@ -7,12 +7,11 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/18 15:51:03 by npapot              #+#    #+#            #
-#   Updated: 2026/06/18 23:50:33 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/19 10:50:51 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
 import faiss
-from pathlib import Path
 from sentence_transformers import SentenceTransformer
 import numpy as np
 import pickle
@@ -23,7 +22,7 @@ class FaissMatching:
         self.model = SentenceTransformer('all-MiniLM-L6-v2')
         self.corpus: list[str] = []
 
-    def embed_da_chucks(
+    def embed_da_chunks(
                 self,
                 corpus: list[str],
                 save_data: str = "data/processed",
@@ -42,7 +41,7 @@ class FaissMatching:
 
         if save_to_path:
             faiss.write_index(self.faiss_index, save_data + "/faiss.index")
-            with open(save_data + "/faiss_corpus.pkl", 'wb') as file: 
+            with open(save_data + "/faiss_corpus.pkl", 'wb') as file:
                 pickle.dump(self.corpus, file)
 
     def query_da_embedded(
@@ -74,8 +73,9 @@ class FaissMatching:
     def retrieve_da_data(
                 self,
                 save_data: str = "data/processed"
-                ) -> list[str]:
-        self.faiss_index = faiss.read_index(save_data + "/faiss.index")
+                ) -> None:
+        self.faiss_index = faiss.read_index(
+                                save_data + "/faiss.index"
+                            )  # type: ignore
         with open(save_data + "/faiss_corpus.pkl", 'rb') as file:
             self.corpus = pickle.load(file)
-        return self.corpus

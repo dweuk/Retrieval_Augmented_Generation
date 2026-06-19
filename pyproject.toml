@@ -18,8 +18,6 @@ dependencies = [
     "bm25s[full]",
     "PyStemmer",
     "spacy",
-    "os",
-    "pickle",
     "pdfplumber",
     "faiss-cpu",
     "sentence-transformers",

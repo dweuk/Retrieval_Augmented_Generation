@@ -16,7 +16,7 @@ INTERPRETER			=	python
 install:
 	@echo "$(RED)╔════════════════════════════════════════════════════════════════╗"
 	@echo "$(RED)║                                                                ║"
-	@echo "$(RED)║  44  44    2222    Author:  $(GREEN)Made with pain by $(AUTHOR) $(RED)          ║"
+	@echo "$(RED)║  44  44    2222    Author:  $(GREEN)Made with pleasure by $(AUTHOR) $(RED)       ║"
 	@echo "$(RED)║  44  44   22  22   Project: $(YELLOW)Best $(PROJECT_NAME) Ever $(RED)                     ║"
 	@echo "$(RED)║  444444      22    Github:  $(CYAN)https://github.com/dweuk$      $(RED)      ║"
 	@echo "$(RED)║      44     22                                                 ║"

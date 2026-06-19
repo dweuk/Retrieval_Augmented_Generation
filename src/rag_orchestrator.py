@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/11 11:47:19 by npapot              #+#    #+#            #
-#   Updated: 2026/06/19 10:40:50 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/19 10:51:19 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -78,7 +78,7 @@ class RagOrchestrator:
         splitter = self.get_right_splitter(file_format)
         return splitter.split_text(extracted_text)
 
-    def extend_chunks(self, data_directory) -> int:
+    def extend_chunks(self, data_directory: Path) -> int:
         total_chunks: int = 0
         for file_path in self._get_all_files(data_directory):
             file_chunks = self.ingest_helper(file_path)
@@ -176,7 +176,7 @@ class RagOrchestrator:
                             self.chunks, save_data, save_to_path=True
                         )
             self.faiss.embed_da_chunks(
-                            self.chunks, save_data,save_to_path=True
+                            self.chunks, save_data, save_to_path=True
                         )
 
         best_combined_chunks = self.index_helper(query, max_chunk)

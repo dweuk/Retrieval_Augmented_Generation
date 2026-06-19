@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/18 19:27:30 by npapot              #+#    #+#            #
-#   Updated: 2026/06/18 19:42:34 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/19 10:46:14 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -20,7 +20,7 @@ class ReRanker:
     def __init__(
             self,
             model_name: str = 'cross-encoder/ms-marco-MiniLM-L-6-v2'
-        ) -> None:
+            ) -> None:
         print("Loading Cross-Encoder model...")
         self.model = CrossEncoder(model_name)
 
@@ -34,6 +34,8 @@ class ReRanker:
 
         scores = self.model.predict(pairs)
 
-        classement = sorted(zip(unique_chunks, scores), key=lambda c: c[1], reverse=True)
+        classement = sorted(
+                zip(unique_chunks, scores), key=lambda c: c[1], reverse=True
+            )
 
         return [texte for texte, _ in classement[:k]]
