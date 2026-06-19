@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/18 11:42:51 by npapot              #+#    #+#            #
-#   Updated: 2026/06/19 10:50:10 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/19 11:06:33 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -20,6 +20,7 @@ class BestMatching25:
     def __init__(self) -> None:
         self.corpus: list[str] = []
         self.retriever = bm25s.BM25(backend="numba")
+        self.stemmer = Stemmer.Stemmer("english")
 
     def index_da_chunks(
                     self,
@@ -29,7 +30,6 @@ class BestMatching25:
                 ) -> None:
         path_to_save_data = Path(save_data)
         # optional: create a stemmer
-        self.stemmer = Stemmer.Stemmer("english")
         self.corpus.extend(corpus)
 
         # Tokenize the corpus and only keep the ids (faster and saves memory)
@@ -58,16 +58,17 @@ class BestMatching25:
         # Get top-k results as a tuple of (doc ids, scores).
         # Both are arrays of shape (n_queries, k).
         # To return docs instead of IDs, set the `corpus=corpus` parameter.
-        if print_yes:
-            results, scores = self.retriever.retrieve(
-                                    query_tokens, corpus=self.corpus, k=k_size
-                                )
-        else:
-            results, scores = self.retriever.retrieve(query_tokens, k=k_size)
+        results, scores = self.retriever.retrieve(
+                                query_tokens, corpus=self.corpus, k=k_size
+                            )
 
         for i in range(results.shape[1]):
             doc, score = results[0, i], scores[0, i]
-            right_chunk.append(doc)
+            if isinstance(doc, dict) and "text" in doc:
+                doc_text = doc["text"]
+            else:
+                doc_text = str(doc)
+            right_chunk.append(doc_text)
             if print_yes:
                 print(f"-------Rank {i+1} (score: {score:.2f}): {doc}-------")
                 print(f"{doc}")
@@ -80,4 +81,5 @@ class BestMatching25:
                 save_data: str = "data/processed"
                 ) -> None:
         path_to_save_data = Path(save_data)
-        self.retriever.load(path_to_save_data, load_corpus=True)
+        self.retriever = bm25s.BM25.load(path_to_save_data, load_corpus=True)
+        self.corpus = self.retriever.corpus

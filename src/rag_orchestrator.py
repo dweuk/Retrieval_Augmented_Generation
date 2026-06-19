@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/11 11:47:19 by npapot              #+#    #+#            #
-#   Updated: 2026/06/19 10:51:19 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/19 11:09:03 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -154,7 +154,7 @@ class RagOrchestrator:
     def index(
                 self,
                 query: str,
-                max_chunk: int = 5,
+                max_chunks: int = 5,
                 save_data: str = "data/processed"
             ) -> None:
         if os.path.exists(save_data + "/faiss.index"):
@@ -179,14 +179,14 @@ class RagOrchestrator:
                             self.chunks, save_data, save_to_path=True
                         )
 
-        best_combined_chunks = self.index_helper(query, max_chunk)
+        best_combined_chunks = self.index_helper(query, max_chunks)
 
-        print("\n🏆 THE FINAL TOP 3 CHUNKS 🏆")
+        print(f"\n\nTHE FINAL TOP {max_chunks} CHUNKS \n\n")
         for i, chunk in enumerate(best_combined_chunks):
             print(f"\n--- Winner #{i+1} ---")
             print(chunk)
 
-    # def index_bm25(self, max_chunk_size: int = 1500) -> None:
+    # def index_bm25(self, max_chunks_size: int = 1500) -> None:
     #     self.bm25.index_da_chuncks(self.chunks)
 
     # def test_bm25s(self, query: str) -> None:
