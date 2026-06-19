@@ -1,6 +1,7 @@
 # PROJECT CONFIGURATION
 AUTHOR=npapot
 PROJECT_NAME=RAG
+export SETUPTOOLS_SCM_PRETEND_VERSION=0.10.1
 
 # COLORS
 RED     = \033[0;31m
@@ -38,10 +39,9 @@ install:
 		fi; \
 		pipx install uv >/dev/null 2>&1 || python3 -m pip install --user uv >/dev/null 2>&1; \
 	fi
-	@uv sync
 
 sync:
-	uv sync
+	uv sync 
 
 run:
 	uv run python rag.py
@@ -51,6 +51,9 @@ ingest:
 
 index:
 	uv run python rag.py index --query "llamaindex"
+
+answer:
+	uv run python rag.py answer "llamaindex"
 
 test_bm25s:
 	uv run python rag.py test_bm25s --query "llamaindex"

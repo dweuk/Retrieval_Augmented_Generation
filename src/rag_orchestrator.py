@@ -7,14 +7,16 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/11 11:47:19 by npapot              #+#    #+#            #
-#   Updated: 2026/06/19 11:22:58 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/19 15:19:20 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
 from pathlib import Path
 from typing import Generator, Any
 import os
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
+# from vllm import LLM, SamplingParams  # type: ignore
 from src.files_parser.parser_factory import ParserFactory
 from src.hybrid_retrieval import BestMatching25, FaissMatching
 from src.re_ranking import ReRanker
@@ -27,10 +29,13 @@ from src.basemodel_config import Prompt
 
 class RagOrchestrator:
     def __init__(self) -> None:
+        self.device: str | None = None
         self.parser_factory = ParserFactory()
         self.bm25 = BestMatching25()
-        self.faiss = FaissMatching()
-        self.re_ranker = ReRanker()
+        self.faiss: FaissMatching | None = None
+        self.re_ranker: ReRanker | None = None
+        self.llm: Any = None
+        self.tokenizer: Any = None
         self.lang_mapping = {
             ".py": Language.PYTHON,
             ".js": Language.JS,
@@ -44,6 +49,25 @@ class RagOrchestrator:
             ".html": Language.HTML
         }
         self.chunks: list[str] = []
+
+    def _load_llm(self, model_name: str) -> None:
+        if self.llm is not None:
+            return
+
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.llm = AutoModelForCausalLM.from_pretrained(model_name)
+        self.llm.to(self.device)
+        self.llm.eval()
+
+    def _get_faiss(self) -> FaissMatching:
+        if self.faiss is None:
+            self.faiss = FaissMatching()
+        return self.faiss
+
+    def _get_re_ranker(self) -> ReRanker:
+        if self.re_ranker is None:
+            self.re_ranker = ReRanker()
+        return self.re_ranker
 
     def get_right_splitter(
             self,
@@ -89,9 +113,7 @@ class RagOrchestrator:
 
     def ingest(
             self,
-            data_directory: Path = Path(
-                "/Users/noepapot/informatic/ecole_42/circle_4/RAG/vllm-0.10.1"
-            ),
+            data_directory: str | Path = Path("Subjects"),
             chunk_size: int = 1500
             ) -> None:
         self.overlap: int = chunk_size // 20
@@ -134,7 +156,7 @@ class RagOrchestrator:
                                             k_size=3,
                                             print_yes=False
                                         )
-        faiss_chunks: list[str] = self.faiss.query_da_embedded(
+        faiss_chunks: list[str] = self._get_faiss().query_da_embedded(
                                             query,
                                             k_size=3,
                                             print_yes=False
@@ -143,7 +165,7 @@ class RagOrchestrator:
         combined_chunks = bm25_chunks + faiss_chunks
         unique_chunks = list(set(combined_chunks))
 
-        best_combined_chunks = self.re_ranker.reclassification(
+        best_combined_chunks = self._get_re_ranker().reclassification(
                                                     query,
                                                     unique_chunks,
                                                     max_chunk
@@ -180,7 +202,7 @@ class RagOrchestrator:
         if os.path.exists(save_data + "/faiss.index"):
             print("Libraries found on disk! Loading them instantly...")
             self.bm25.retrieve_da_data(save_data)
-            self.faiss.retrieve_da_data(save_data)
+            self._get_faiss().retrieve_da_data(save_data)
         else:
             print("No libraries found. Starting the ingestion process...")
             self.ingest()
@@ -195,7 +217,7 @@ class RagOrchestrator:
             self.bm25.index_da_chunks(
                             self.chunks, save_data, save_to_path=True
                         )
-            self.faiss.embed_da_chunks(
+            self._get_faiss().embed_da_chunks(
                             self.chunks, save_data, save_to_path=True
                         )
 
@@ -208,6 +230,72 @@ class RagOrchestrator:
                 print(chunk)
 
         self._write_da_chunks(save_data, query, best_combined_chunks)
+
+    def answer(
+            self,
+            query: str,
+            top_k: int = 5,
+            model_name: str = "Qwen/Qwen3-0.6B",
+            max_tokens: int = 100,
+            temperature: float = 0.8,
+            top_p: float = 0.95,
+            save_data: str = "data/processed",
+            ) -> None:
+        self.bm25.retrieve_da_data(save_data)
+        self._get_faiss().retrieve_da_data(save_data)
+
+        import torch
+
+        if self.device is None:
+            if torch.backends.mps.is_available():
+                self.device = "mps"
+            elif torch.cuda.is_available():
+                self.device = "cuda"
+            else:
+                self.device = "cpu"
+
+        best_chunks: list[str] = self.index_helper(query, top_k)
+        context = "\n\n".join(best_chunks)
+
+        final_prompt = (
+                    "You are a helpful assistant. "
+                    "Use only the provided context to answer the user's query."
+                    " If the answer is not in the context, "
+                    "say that you do not know.\n\n"
+                    f"Context:\n{context}\n\n"
+                    f"User's query: {query}\n"
+                    "Answer: "
+                )
+
+        self._load_llm(model_name)
+
+        inputs = self.tokenizer(final_prompt, return_tensors="pt")
+        inputs = {
+            name: tensor.to(self.device) for name, tensor in inputs.items()
+        }
+
+        with torch.inference_mode():
+            output_ids = self.llm.generate(
+                                    **inputs,
+                                    max_new_tokens=max_tokens,
+                                    do_sample=temperature > 0,
+                                    temperature=temperature,
+                                    top_p=top_p,
+                                    pad_token_id=self.tokenizer.eos_token_id,
+                                )
+
+        prompt_length = inputs["input_ids"].shape[1]
+        answer_ids = output_ids[0, prompt_length:]
+        generated_text = self.tokenizer.decode(
+                                    answer_ids,
+                                    skip_special_tokens=True,
+                                )
+
+        # Print the outputs.
+        print("\nGenerated Output:\n" + "-" * 60)
+        print(f"Prompt:    {query!r}")
+        print(generated_text)
+        print("-" * 60)
 
     # def index_bm25(self, max_chunks_size: int = 1500) -> None:
     #     self.bm25.index_da_chuncks(self.chunks)
