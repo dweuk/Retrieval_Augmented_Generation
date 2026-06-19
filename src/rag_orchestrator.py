@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/11 11:47:19 by npapot              #+#    #+#            #
-#   Updated: 2026/06/19 11:09:03 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/19 11:22:58 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -151,11 +151,31 @@ class RagOrchestrator:
 
         return best_combined_chunks
 
+    def _write_da_chunks(
+                    self,
+                    save_data: str,
+                    query: str,
+                    best_combined_chunks: list[str]
+                ) -> None:
+        chunks_dir = Path(save_data) / "chunks"
+        chunks_dir.mkdir(parents=True, exist_ok=True)
+        output_file = chunks_dir / "best_chunks.txt"
+
+        with open(output_file, "w", encoding="utf-8") as f:
+            f.write(f"Query: {query}\n")
+            f.write("=" * 50 + "\n\n")
+            for i, chunk in enumerate(best_combined_chunks):
+                f.write(f"\n\n--- Winner #{i+1} ---\n")
+                f.write(f"{chunk}\n\n")
+
+            print(f"\nSaved best chunks to {output_file}\n")
+
     def index(
                 self,
                 query: str,
                 max_chunks: int = 5,
-                save_data: str = "data/processed"
+                save_data: str = "data/processed",
+                print_yes: bool = False
             ) -> None:
         if os.path.exists(save_data + "/faiss.index"):
             print("Libraries found on disk! Loading them instantly...")
@@ -181,10 +201,13 @@ class RagOrchestrator:
 
         best_combined_chunks = self.index_helper(query, max_chunks)
 
-        print(f"\n\nTHE FINAL TOP {max_chunks} CHUNKS \n\n")
-        for i, chunk in enumerate(best_combined_chunks):
-            print(f"\n--- Winner #{i+1} ---")
-            print(chunk)
+        if print_yes:
+            print(f"\n\nTHE FINAL TOP {max_chunks} CHUNKS \n\n")
+            for i, chunk in enumerate(best_combined_chunks):
+                print(f"\n--- Winner #{i+1} ---")
+                print(chunk)
+
+        self._write_da_chunks(save_data, query, best_combined_chunks)
 
     # def index_bm25(self, max_chunks_size: int = 1500) -> None:
     #     self.bm25.index_da_chuncks(self.chunks)
