@@ -50,10 +50,10 @@ ingest:
 	uv run python rag.py ingest --data_directory "Subjects"
 
 index:
-	uv run python rag.py index --query "llamaindex"
+	uv run python rag.py index --query "What activation formats does the fused batched MoE layer return in vLLM?"
 
 answer:
-	uv run python rag.py answer "llamaindex"
+	uv run python rag.py answer "What activation formats does the fused batched MoE layer return in vLLM?"
 
 test_bm25s:
 	uv run python rag.py test_bm25s --query "llamaindex"

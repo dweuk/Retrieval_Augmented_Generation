@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/04/03 15:15:19 by npapot              #+#    #+#            #
-#   Updated: 2026/06/18 01:07:08 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/19 15:27:43 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -17,7 +17,7 @@ import fire  # type: ignore
 
 def rag() -> None:
     """Main programm"""
-    print("Welcome to my CRAZY Retrieval Augmented Generation project!")
+    print("\nWelcome to my CRAZY Retrieval Augmented Generation project!\n\n")
 
     try:
         fire.Fire(RagOrchestrator)

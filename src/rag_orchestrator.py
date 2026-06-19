@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/11 11:47:19 by npapot              #+#    #+#            #
-#   Updated: 2026/06/19 15:19:20 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/19 15:36:26 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -234,11 +234,11 @@ class RagOrchestrator:
     def answer(
             self,
             query: str,
-            top_k: int = 5,
+            top_k: int = 20,
             model_name: str = "Qwen/Qwen3-0.6B",
-            max_tokens: int = 100,
-            temperature: float = 0.8,
-            top_p: float = 0.95,
+            max_tokens: int = 150,
+            temperature: float = 0.7,
+            top_p: float = 0.8,
             save_data: str = "data/processed",
             ) -> None:
         self.bm25.retrieve_da_data(save_data)
@@ -266,22 +266,33 @@ class RagOrchestrator:
                     f"User's query: {query}\n"
                     "Answer: "
                 )
+        messages = [
+                {"role": "user", "content": final_prompt},
+            ]
 
+        print("Loading LLM...")
         self._load_llm(model_name)
 
-        inputs = self.tokenizer(final_prompt, return_tensors="pt")
-        inputs = {
-            name: tensor.to(self.device) for name, tensor in inputs.items()
-        }
+        inputs = self.tokenizer.apply_chat_template(
+                                        messages,
+                                        tokenize=True,
+                                        add_generation_prompt=True,
+                                        enable_thinking=False,
+                                        return_dict=True,
+                                        return_tensors="pt",
+                                    )
+        # creates PyTorch tensors that matches CUDA or MPS.
+        inputs = inputs.to(self.device)
 
         with torch.inference_mode():
             output_ids = self.llm.generate(
                                     **inputs,
                                     max_new_tokens=max_tokens,
-                                    do_sample=temperature > 0,
                                     temperature=temperature,
+                                    do_sample=temperature > 0,
                                     top_p=top_p,
-                                    pad_token_id=self.tokenizer.eos_token_id,
+                                    top_k=top_k,
+                                    pad_token_id=self.tokenizer.eos_token_id
                                 )
 
         prompt_length = inputs["input_ids"].shape[1]
