@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/11 11:47:19 by npapot              #+#    #+#            #
-#   Updated: 2026/06/19 00:00:35 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/19 10:40:50 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -152,33 +152,6 @@ class RagOrchestrator:
         return best_combined_chunks
 
     def index(
-            self,
-            query: str,
-            max_chunk_zise: int = 1500,
-            max_chunk: int = 5,
-            save_data: str = "data/processed",
-            print_it: bool = False
-        ) -> list[str]:
-        # path_to_save_data = Path(save_data)
-        best_combined_chunks: list[str] = []
-        try:
-            self.bm25.index_da_chunks(self.chunks)
-            self.faiss.embed_da_chunks(self.chunks)
-
-            best_combined_chunks = self.index_helper(query, max_chunk)
-            if print_it:
-                print("\n🏆 THE FINAL TOP 3 CHUNKS 🏆")
-                for i, chunk in enumerate(best_combined_chunks):
-                    print(f"\n--- Winner #{i+1} ---") 
-                    print(chunk)
-
-            return best_combined_chunks
-
-        except Exception as e:
-            print(e)
-            return
-
-    def ask_question(
                 self,
                 query: str,
                 max_chunk: int = 5,
