@@ -17,7 +17,7 @@ INTERPRETER			=	python
 install:
 	@echo "$(RED)╔════════════════════════════════════════════════════════════════╗"
 	@echo "$(RED)║                                                                ║"
-	@echo "$(RED)║  44  44    2222    Author:  $(GREEN)Made with pleasure by $(AUTHOR) $(RED)       ║"
+	@echo "$(RED)║  44  44    2222    Author:  $(GREEN)Made with pleasure by $(AUTHOR) $(RED)      ║"
 	@echo "$(RED)║  44  44   22  22   Project: $(YELLOW)Best $(PROJECT_NAME) Ever $(RED)                     ║"
 	@echo "$(RED)║  444444      22    Github:  $(CYAN)https://github.com/dweuk$      $(RED)      ║"
 	@echo "$(RED)║      44     22                                                 ║"
@@ -47,13 +47,13 @@ run:
 	uv run python rag.py
 
 ingest:
-	uv run python rag.py ingest --data_directory "Subjects"
+	uv run python rag.py ingest --data_directory "Subject"
 
 index:
 	uv run python rag.py index --query "What activation formats does the fused batched MoE layer return in vLLM?"
 
 answer:
-	uv run python rag.py answer "What activation formats does the fused batched MoE layer return in vLLM?"
+	uv run python rag.py answer "How can I find out what my credit limit is?"
 
 test_bm25s:
 	uv run python rag.py test_bm25s --query "llamaindex"

@@ -7,7 +7,7 @@
 #   By: npapot <npapot@student.42perpignan.fr>       +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/06/16 12:00:40 by npapot              #+#    #+#            #
-#   Updated: 2026/06/18 01:05:12 by npapot             ###   ########.fr      #
+#   Updated: 2026/06/30 15:06:38 by npapot             ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -65,7 +65,7 @@ class ParserFactory:
     def get_parser(self, file_path: Path) -> BaseParser | None:
         file_format = file_path.suffix.lower()
 
-        if file_format == "pdf":
+        if file_format == ".pdf":
             return (self._pdf_parser(file_format, file_path))
 
         if file_format not in self.parser_classes:
